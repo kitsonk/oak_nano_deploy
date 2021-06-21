@@ -32,26 +32,25 @@ const indexHtml = `<!DOCTYPE html>
 
 const router = new Router();
 
-const proxyOptions: ProxyOptions = {
-  contentType(url, ct) {
-    if (ct) {
-      ct = contentType(ct);
-    }
-    const impliedContentType = contentType(lookup(url) ?? "");
-    if (ct !== impliedContentType) {
-      return impliedContentType;
-    }
-  },
-};
-
 router
   .get("/", (ctx) => {
     ctx.response.body = indexHtml;
   })
   .get("/static/:path*", proxy(new URL("../static/", import.meta.url)))
   .get(
-    "/(bundle.js|bundle.js.map)",
-    proxy(new URL("../build/", import.meta.url), proxyOptions),
+    "/bundle.js",
+    proxy(new URL("../build/", import.meta.url), {
+      contentType(url, ct) {
+        if (ct) {
+          ct = contentType(ct);
+        }
+        const impliedContentType = contentType(lookup(url) ?? "");
+        if (ct !== impliedContentType) {
+          return impliedContentType;
+        }
+      },
+      match: /^\/bundle\.js(\.map)?$/,
+    }),
   );
 
 export const app = new Application();
