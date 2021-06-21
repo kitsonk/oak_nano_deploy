@@ -50,7 +50,7 @@ router
   })
   .get("/static/:path*", proxy(new URL("../static/", import.meta.url)))
   .get(
-    "/bundle.js*",
+    "/(bundle.js|bundle.js.map)",
     proxy(new URL("../build/", import.meta.url), proxyOptions),
   );
 
