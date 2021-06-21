@@ -15,7 +15,7 @@ export const App = (props: AppProps) => (<div>
   </Helmet>
 
   <Helmet footer>
-    <script src="/bundle.js"></script>
+    <script type="module" src="/bundle.js"></script>
   </Helmet>
 
   <h2>Comments</h2>

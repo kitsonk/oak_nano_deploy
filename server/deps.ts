@@ -12,4 +12,3 @@ export {
   proxy,
   Router,
 } from "https://deno.land/x/oak@v7.6.3/mod.ts";
-export type { ProxyOptions } from "https://deno.land/x/oak@v7.6.3/mod.ts";

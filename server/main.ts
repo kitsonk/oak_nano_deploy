@@ -9,7 +9,6 @@ import {
   renderSSR,
   Router,
 } from "./deps.ts";
-import type { ProxyOptions } from "./deps.ts";
 
 const comments = ["server side comment one"];
 
@@ -26,7 +25,6 @@ const indexHtml = `<!DOCTYPE html>
   <body>
     ${body}
     ${footer.join("\n")}
-    <script type="module" src="/bundle.js"></script>
   </body>
 </html>`;
 
@@ -36,27 +34,26 @@ router
   .get("/", (ctx) => {
     ctx.response.body = indexHtml;
   })
-  .get("/static/:path*", proxy(new URL("../static/", import.meta.url)))
-  .get(
-    "/bundle.js",
-    proxy(new URL("../build/", import.meta.url), {
-      contentType(url, ct) {
-        if (ct) {
-          ct = contentType(ct);
-        }
-        const impliedContentType = contentType(lookup(url) ?? "");
-        if (ct !== impliedContentType) {
-          return impliedContentType;
-        }
-      },
-      match: /^\/bundle\.js(\.map)?$/,
-    }),
-  );
+  .get("/static/:path*", proxy(new URL("../static/", import.meta.url)));
 
 export const app = new Application();
 
 app.use(router.routes());
 app.use(router.allowedMethods());
+
+app.use(proxy(new URL("../build/", import.meta.url), {
+  contentType(url, ct) {
+    if (ct) {
+      ct = contentType(ct);
+    }
+    const impliedContentType = contentType(lookup(url) ?? "");
+    if (ct !== impliedContentType) {
+      return impliedContentType;
+    }
+  },
+  match: /^\/bundle\.js(?:\.map)?$/,
+}));
+
 app.use(async (ctx, next) => {
   ctx.response.headers.delete("content-security-policy");
   await next();
