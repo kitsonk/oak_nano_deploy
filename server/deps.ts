@@ -1,3 +1,4 @@
+export { h } from "https://deno.land/x/nano_jsx@v0.0.18/core.ts";
 export { Helmet } from "https://deno.land/x/nano_jsx@v0.0.18/components/helmet.ts";
 export { renderSSR } from "https://deno.land/x/nano_jsx@v0.0.18/ssr.ts";
 

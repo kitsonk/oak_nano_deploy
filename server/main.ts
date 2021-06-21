@@ -1,9 +1,9 @@
 import { App } from "../components/App.tsx";
-import { Application, Helmet, proxy, renderSSR, Router } from "./deps.ts";
+import { Application, h, Helmet, proxy, renderSSR, Router } from "./deps.ts";
 
 const comments = ["server side comment one"];
 
-const ssr = renderSSR(new App({ comments }));
+const ssr = renderSSR(h(App, { comments }));
 const { body, head, footer } = Helmet.SSR(ssr);
 
 const indexHtml = `<!DOCTYPE html>
